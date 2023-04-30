@@ -1,63 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import MovieList from './MovieList';
+import Filter from './Filter';
+import './App.css';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      person: {
-        fullName: 'Azza Souei',
-        bio: 'Web develper searching to extend new professional experience ',
-        imgSrc: 'profile-image.jpg',
-        profession: 'Web developer',
-      },
-      shows: false,
-      timeSinceMount: 0,
-    };
-    this.timer = null;
-  }
+const App = () => {
+  const [movies, setMovies] = useState([]);
 
-  componentDidMount() {
-    this.timer = setInterval(() => {
-      this.setState((prevState) => ({
-        timeSinceMount: prevState.timeSinceMount + 1,
-      }));
-    }, 1000);
-  }
+  const handleFilter = (titleFilter, ratingFilter) => {
+    
+    const filteredMovies = movies.filter((movie) => {
+      return (
+        movie.title.toLowerCase().includes(titleFilter.toLowerCase()) &&
+        movie.rating >= ratingFilter
+      );
+    });
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  toggleShow = () => {
-    this.setState((prevState) => ({
-      shows: !prevState.shows,
-    }));
+    // Update the movie list with the filtered results
+    setMovies(filteredMovies);
   };
 
-  render() {
-    const { fullName, bio, imgSrc, profession } = this.state.person;
-    const { shows, timeSinceMount } = this.state;
-
-    return (
-      <div>
-        <button onClick={this.toggleShow}>
-          Toggle Profile
-        </button>
-
-        {shows && (
-          <div>
-            <h1>{fullName}</h1>
-            <p>{bio}</p>
-            <img src={imgSrc} alt="Profile" />
-            <p>Profession: {profession}</p>
-          </div>
-        )}
-
-        <p>Time Since Mount: {timeSinceMount} seconds</p>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="app">
+      <h1>My Movie App</h1>
+      <Filter handleFilter={handleFilter} />
+      <MovieList movies={movies} />
+      {/* Render other components or features */}
+    </div>
+  );
+};
 
 export default App;
+
+
 
